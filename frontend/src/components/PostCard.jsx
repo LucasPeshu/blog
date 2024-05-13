@@ -10,12 +10,12 @@ function PostCard({ slug, nombre, excerpt, imagen, categoria }) {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="">
+      <div>
         <div className="">
           <img className="h-48 w-full rounded-t-xl object-cover" src={imagen} alt="Imagen de la publicación" />
         </div>
         <div className="p-4">
-          <div className='text-indigo-500 rounded-lg font-medium'>{categoria}</div>
+        <div className='inline-block text-white bg-indigo-500 px-2 rounded-lg font-medium'>{categoria}</div>
           <Link to={`/posts/${slug}`} className="uppercase tracking-wide font-semibold text-xl line-clamp-2">{nombre}</Link>
           <p className="text-gray-500 font-normal line-clamp-3">{excerpt}</p>
         </div>

@@ -1,17 +1,21 @@
 from django.shortcuts import get_object_or_404, render
 from rest_framework.views import APIView
 from rest_framework.response import Response
-
+from rest_framework import status
 from .models import Post, Categoria
 from .serializers import PostSerializer, CategoriaSerializer
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
 
 
 class BlogListView(APIView):
     def get(self, request, *args, **kwargs):
-        posts = Post.postobjects.all()[0:8]
-        serializer = PostSerializer(posts,many=True)
-        return Response(serializer.data)
-
+        paginator = PageNumberPagination()
+        paginator.page_size = 8
+        posts = Post.postobjects.all()
+        result_page = paginator.paginate_queryset(posts, request)
+        serializer = PostSerializer(result_page, many=True)
+        return paginator.get_paginated_response(serializer.data)
 
 class PostDetailView(APIView):
     def get(self, request, post_slug,*args, **kwargs):
@@ -32,3 +36,14 @@ class CategoriaListView(APIView):
         categorias = Categoria.objects.all()
         serializer = CategoriaSerializer(categorias, many=True)
         return Response(serializer.data)
+
+class SearchBlogView(APIView):
+    def get(self, request, search_term):
+        matches = Post.postobjects.filter(
+            Q(title__icontains=search_term) |
+            Q(content__icontains=search_term) |
+            Q(categoria__nombre__icontains=search_term)
+        )
+
+        serializer = PostSerializer(matches, many=True)
+        return Response({'filtered_posts': serializer.data}, status=status.HTTP_200_OK)

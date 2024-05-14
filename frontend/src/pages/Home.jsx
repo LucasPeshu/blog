@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import PostCard from '../components/PostCard';
-import LatestPostsByCategory from '../components/LatestPostsByCategory'
+import LatestPostsByCategory from '../components/LatestPostsByCategory';
 import SearchBar from '../components/SearchBar';
+
 function Home() {
   const [posts, setPosts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -28,6 +29,18 @@ function Home() {
       .catch(error => console.error('Error fetching categories:', error));
   }, [currentPage]);
 
+  const handleNextPage = () => {
+    if (currentPage < 2) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   return (
     <div className='container mx-auto px-6 sm:px-4 lg:px-40'>
       <SearchBar />
@@ -47,15 +60,15 @@ function Home() {
       <div className="flex justify-center mb-6">
         <button
           className="bg-indigo-500 font-medium text-white px-4 py-2 rounded-lg mr-2"
-          onClick={() => setCurrentPage(currentPage - 1)}
+          onClick={handlePreviousPage}
           disabled={currentPage === 1}
         >
           Anterior
         </button>
         <button
           className="bg-indigo-500 font-medium text-white px-4 py-2 rounded-lg ml-2"
-          onClick={() => setCurrentPage(currentPage + 1)}
-          disabled={currentPage === totalPages}
+          onClick={handleNextPage}
+          disabled={currentPage === 2}
         >
           Siguiente
         </button>
@@ -71,3 +84,4 @@ function Home() {
 }
 
 export default Home;
+

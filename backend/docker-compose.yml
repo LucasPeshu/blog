@@ -1,0 +1,11 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_DB: blog
+      POSTGRES_USER: lucasadmin
+      POSTGRES_PASSWORD: lucasadmin123
+    ports:
+      - "5432:5432"

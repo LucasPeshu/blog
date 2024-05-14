@@ -22,17 +22,25 @@ function PostDetailPage() {
     day: 'numeric',
   });
 
+  const renderContentWithLineBreaks = (content) => {
+    // Divide el contenido por saltos de línea y crea un array de elementos <p> para cada línea
+    const paragraphs = content.split('\n').map((line, index) => (
+      <p key={index}>{line}</p>
+    ));
+    return paragraphs;
+  };
+
   return (
     <div className='container mx-auto px-6 sm:px-4 lg:px-40'>
       <img className='rounded-b-xl h-96 w-full object-cover' src={`http://localhost:8000${post.thumbnail}`} alt="" />
       <h2 className='text-3xl sm:text-4xl lg:text-6xl uppercase font-bold py-6'>{post.title}</h2>
       <div className='font-medium text-xl text-gray-800'>{formattedDate}</div>
       <div className='font-medium text-xl text-gray-800 py-6'>{post.excerpt}</div>
-      <div className='font-medium text-xl text-gray-800 pb-6'>{post.content}</div>
+      <div className='font-medium text-xl text-gray-800 pb-6'>
+        {renderContentWithLineBreaks(post.content)}
+      </div>
     </div>
   );
 }
 
 export default PostDetailPage;
-
-

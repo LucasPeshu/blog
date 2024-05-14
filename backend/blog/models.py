@@ -1,6 +1,16 @@
+import os
 from django.db import models
+from django.utils.text import slugify
 from django.utils import timezone
 from django.contrib.auth.models import User
+
+def upload_to(instance, filename):
+    """
+    Función de ayuda para generar nombres de archivo únicos
+    """
+    base_filename, file_extension = os.path.splitext(filename)
+    new_filename = slugify(base_filename) + file_extension
+    return os.path.join('blog/', new_filename)
 
 def user_directory_path(instance, filename):
     return 'blog/{0}/{1}'.format(instance.title, filename)
@@ -23,7 +33,7 @@ class Post(models.Model):
     )
 
     title = models.CharField(max_length=250)
-    thumbnail = models.ImageField(upload_to=user_directory_path, blank=True, null=True)
+    thumbnail = models.ImageField(upload_to=upload_to, blank=True, null=True)
     excerpt = models.TextField(null=True)
     content = models.TextField()
     slug = models.SlugField(max_length=250, unique_for_date='published', null=False, unique=True)
